@@ -1,0 +1,272 @@
+[1;31m
+Start test 1[0m
+Input the image filename:
+> test\notexist.png
++The file test\notexist.png doesn't exist.
+[1;31m
+Start test 2[0m
+Input the image filename:
+> test\grey.png
+/The number of image color components isn't 3.
+[1;31m
+Start test 3[0m
+Input the image filename:
+> test\bits16.png
+The image isn't 24 or 32-bit.
+[1;31m
+Start test 4[0m
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\notexist.png
++The file test\notexist.png doesn't exist.
+[1;31m
+Start test 5[0m
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\grey.png
+3The number of watermark color components isn't 3.
+[1;31m
+Start test 6[0m
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\bits16.png
+#The watermark isn't 24 or 32-bit.
+[1;31m
+Start test 7[0m
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\wide.png
+(The watermark's dimensions are larger.
+[1;31m
+Start test 8[0m
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\tall.png
+(The watermark's dimensions are larger.
+[1;31m
+Start test 9[0m
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgb.png
+*Do you want to set a transparency color?
+> yes
+4Input a transparency color ([Red] [Green] [Blue]):
+> 0 0 0
+>Input the watermark transparency percentage (Integer 0-100):
+> 20
+,Choose the position method (single, grid):
+> pos
+'The position method input is invalid.
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgb.png
+*Do you want to set a transparency color?
+> yes
+4Input a transparency color ([Red] [Green] [Blue]):
+> 0 0 0
+>Input the watermark transparency percentage (Integer 0-100):
+> 20
+,Choose the position method (single, grid):
+> 0 0
+'The position method input is invalid.
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgb.png
+*Do you want to set a transparency color?
+> yes
+4Input a transparency color ([Red] [Green] [Blue]):
+> 0 0 0
+>Input the watermark transparency percentage (Integer 0-100):
+> 20
+,Choose the position method (single, grid):
+> top
+'The position method input is invalid.
+[1;31m
+Start test 10[0m
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgb.png
+*Do you want to set a transparency color?
+> yes
+4Input a transparency color ([Red] [Green] [Blue]):
+> 0 0 0
+>Input the watermark transparency percentage (Integer 0-100):
+> 20
+,Choose the position method (single, grid):
+	> single
+5Input the watermark position ([x 0-300] [y 0-600]):
+> top
+ The position input is invalid.
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgb.png
+*Do you want to set a transparency color?
+> yes
+4Input a transparency color ([Red] [Green] [Blue]):
+> 0 0 0
+>Input the watermark transparency percentage (Integer 0-100):
+> 20
+,Choose the position method (single, grid):
+	> single
+5Input the watermark position ([x 0-300] [y 0-600]):
+> up right
+ The position input is invalid.
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgb.png
+*Do you want to set a transparency color?
+> yes
+4Input a transparency color ([Red] [Green] [Blue]):
+> 0 0 0
+>Input the watermark transparency percentage (Integer 0-100):
+> 20
+,Choose the position method (single, grid):
+	> single
+5Input the watermark position ([x 0-300] [y 0-600]):
+
+> 100-100
+ The position input is invalid.
+[1;31m
+Start test 11[0m
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgb.png
+*Do you want to set a transparency color?
+> yes
+4Input a transparency color ([Red] [Green] [Blue]):
+> 0 0 0
+>Input the watermark transparency percentage (Integer 0-100):
+> 20
+,Choose the position method (single, grid):
+	> single
+5Input the watermark position ([x 0-300] [y 0-600]):
+	> -1 300
+%The position input is out of range.
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgb.png
+*Do you want to set a transparency color?
+> yes
+4Input a transparency color ([Red] [Green] [Blue]):
+> 0 0 0
+>Input the watermark transparency percentage (Integer 0-100):
+> 20
+,Choose the position method (single, grid):
+	> single
+5Input the watermark position ([x 0-300] [y 0-600]):
+
+> 301 600
+%The position input is out of range.
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgb.png
+*Do you want to set a transparency color?
+> yes
+4Input a transparency color ([Red] [Green] [Blue]):
+> 0 0 0
+>Input the watermark transparency percentage (Integer 0-100):
+> 20
+,Choose the position method (single, grid):
+	> single
+5Input the watermark position ([x 0-300] [y 0-600]):
+> 0 -1
+%The position input is out of range.
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgb.png
+*Do you want to set a transparency color?
+> yes
+4Input a transparency color ([Red] [Green] [Blue]):
+> 0 0 0
+>Input the watermark transparency percentage (Integer 0-100):
+> 20
+,Choose the position method (single, grid):
+	> single
+5Input the watermark position ([x 0-300] [y 0-600]):
+> 0 601
+%The position input is out of range.
+[1;31m
+Start test 12[0m
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgb.png
+*Do you want to set a transparency color?
+> yes
+4Input a transparency color ([Red] [Green] [Blue]):
+> 0 0 0
+>Input the watermark transparency percentage (Integer 0-100):
+> 15
+,Choose the position method (single, grid):
+> grid
+9Input the output image filename (jpg or png extension):
+> test\out1.png
+7The watermarked image test\out1.png has been created.
+[1;31m
+Start test 13[0m
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgba.png
+3Do you want to use the watermark's Alpha channel?
+> yes
+>Input the watermark transparency percentage (Integer 0-100):
+> 25
+,Choose the position method (single, grid):
+> grid
+9Input the output image filename (jpg or png extension):
+> test\out2.png
+7The watermarked image test\out2.png has been created.
+[1;31m
+Start test 14[0m
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgb.png
+*Do you want to set a transparency color?
+> yes
+4Input a transparency color ([Red] [Green] [Blue]):
+> 0 0 0
+>Input the watermark transparency percentage (Integer 0-100):
+> 35
+,Choose the position method (single, grid):
+	> single
+5Input the watermark position ([x 0-300] [y 0-600]):
+
+> 200 200
+9Input the output image filename (jpg or png extension):
+> test\out3.png
+7The watermarked image test\out3.png has been created.
+[1;31m
+Start test 15[0m
+Input the image filename:
+> test\image5.png
+%Input the watermark image filename:
+> test\logorgba.png
+3Do you want to use the watermark's Alpha channel?
+> yes
+>Input the watermark transparency percentage (Integer 0-100):
+> 50
+,Choose the position method (single, grid):
+	> single
+5Input the watermark position ([x 0-300] [y 0-600]):
+
+> 300 400
+9Input the output image filename (jpg or png extension):
+> test\out4.png
+7The watermarked image test\out4.png has been created.

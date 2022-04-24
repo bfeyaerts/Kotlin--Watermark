@@ -1,0 +1,593 @@
+type: edu
+files:
+- name: src/watermark/Main.kt
+  visible: true
+  text: |-
+    package watermark
+
+    fun main() {
+        println("Hello World!")
+    }
+  learner_created: false
+- name: test/WatermarkTest.kt
+  visible: false
+  text: |+
+    import org.hyperskill.hstest.dynamic.DynamicTest
+    import org.hyperskill.hstest.stage.StageTest
+    import org.hyperskill.hstest.testcase.CheckResult
+    import org.hyperskill.hstest.testing.TestedProgram
+    import java.awt.Color
+    import java.io.File
+    import javax.imageio.ImageIO
+    import kotlin.math.abs
+
+    class CardGameTest : StageTest<Any>() {
+
+        @DynamicTest(order = 1)
+        fun imageNotExistTest3(): CheckResult {
+            val main = TestedProgram()
+            var outputString = main.start().trim().lowercase()
+            var position = checkOutput(outputString, 0, "Input the image filename:".lowercase())
+            if ( position  == -1 ) return CheckResult(false, "Invalid prompt for the image filename.")
+
+            outputString = main.execute("test${File.separator}notexist.png").trim().lowercase()
+            position = checkOutput(outputString, 0, "The file test${File.separator}notexist.png doesn't exist.".lowercase())
+            if ( position  == -1 ) return CheckResult(false, "Incorrect output, when a non existing filename was input.")
+
+            if (!main.isFinished) return CheckResult(false, "The application didn't exit.")
+
+            return CheckResult.correct()
+        }
+
+        @DynamicTest(order = 2)
+        fun imageColorCompLess3Test3(): CheckResult {
+            val main = TestedProgram()
+            var outputString = main.start().trim().lowercase()
+            var position = checkOutput(outputString, 0, "Input the image filename:".lowercase())
+            if ( position  == -1 ) return CheckResult(false, "Invalid prompt for the image filename.")
+
+            try {
+                val infile = "test${File.separator}grey.png"
+                val inputFile = File(infile)
+                if (!inputFile.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                outputString = main.execute("test${File.separator}grey.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "The number of image color components isn't 3.".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, when an image that doesn't have 3 color components was input."
+                )
+            } catch  (e: Exception) {
+                return CheckResult(false, "An exception was thrown, when trying to open an image file.")
+            }
+
+            if (!main.isFinished) return CheckResult(false, "The application didn't exit.")
+
+            return CheckResult.correct()
+        }
+
+        @DynamicTest(order = 3)
+        fun imageBitsPerPixelTest3(): CheckResult {
+            val main = TestedProgram()
+            var outputString = main.start().trim().lowercase()
+            var position = checkOutput(outputString, 0, "Input the image filename:".lowercase())
+            if ( position  == -1 ) return CheckResult(false, "Invalid prompt for the image filename.")
+
+            try {
+                val infile = "test${File.separator}bits16.png"
+                val inputFile = File(infile)
+                if (!inputFile.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                outputString = main.execute("test${File.separator}bits16.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "The image isn't 24 or 32-bit.".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, when an image with no 24 or 32 bits per pixel was input."
+                )
+            } catch  (e: Exception) {
+                return CheckResult(false, "An exception was thrown, when trying to open an image file.")
+            }
+
+            if (!main.isFinished) return CheckResult(false, "The application didn't exit.")
+
+            return CheckResult.correct()
+        }
+
+        @DynamicTest(order = 4)
+        fun watermarkNotExistTest3(): CheckResult {
+            val main = TestedProgram()
+            var outputString = main.start().trim().lowercase()
+            var position = checkOutput(outputString, 0, "Input the image filename:".lowercase())
+            if ( position  == -1 ) return CheckResult(false, "Invalid prompt for the image filename.")
+
+            try {
+                val infile = "test${File.separator}image3.png"
+                val inputFile = File(infile)
+                if (!inputFile.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                outputString = main.execute("test${File.separator}image3.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "Input the watermark image filename:".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, after an image filename was input."
+                )
+
+                outputString = main.execute("test${File.separator}notexist.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "The file test${File.separator}notexist.png doesn't exist.".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, when a non existing watermark filename was input."
+                )
+            } catch  (e: Exception) {
+                return CheckResult(false, "An exception was thrown, when trying to open an image file.")
+            }
+
+            if (!main.isFinished) return CheckResult(false, "The application didn't exit.")
+
+            return CheckResult.correct()
+        }
+
+        @DynamicTest(order = 5)
+        fun watermarkColorCompLess3Test3(): CheckResult {
+            val main = TestedProgram()
+            var outputString = main.start().trim().lowercase()
+            var position = checkOutput(outputString, 0, "Input the image filename:".lowercase())
+            if ( position  == -1 ) return CheckResult(false, "Invalid prompt for the image filename.")
+
+            try {
+                val infile1 = "test${File.separator}image3.png"
+                val inputFile1 = File(infile1)
+                if (!inputFile1.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                val infile2 = "test${File.separator}grey.png"
+                val inputFile2 = File(infile2)
+                if (!inputFile2.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                outputString = main.execute("test${File.separator}image3.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "Input the watermark image filename:".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, after an image filename was input."
+                )
+
+                outputString = main.execute("test${File.separator}grey.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "The number of watermark color components isn't 3.".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, when a watermark that doesn't have 3 color components was input."
+                )
+            } catch  (e: Exception) {
+                return CheckResult(false, "An exception was thrown, when trying to open an image file.")
+            }
+
+            if (!main.isFinished) return CheckResult(false, "The application didn't exit.")
+
+            return CheckResult.correct()
+        }
+
+        @DynamicTest(order = 6)
+        fun watermarkBitsPerPixelTest3(): CheckResult {
+            val main = TestedProgram()
+            var outputString = main.start().trim().lowercase()
+            var position = checkOutput(outputString, 0, "Input the image filename:".lowercase())
+            if ( position  == -1 ) return CheckResult(false, "Invalid prompt for the image filename.")
+
+            try {
+                val infile1 = "test${File.separator}image3.png"
+                val inputFile1 = File(infile1)
+                if (!inputFile1.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                val infile2 = "test${File.separator}bits16.png"
+                val inputFile2 = File(infile2)
+                if (!inputFile2.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                outputString = main.execute("test${File.separator}image3.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "Input the watermark image filename:".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, after an image filename was input."
+                )
+
+                outputString = main.execute("test${File.separator}bits16.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "The watermark isn't 24 or 32-bit.".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, when a watermark with no 24 or 32 bits per pixel was input."
+                )
+            } catch  (e: Exception) {
+                return CheckResult(false, "An exception was thrown, when trying to open an image file.")
+            }
+
+            if (!main.isFinished) return CheckResult(false, "The application didn't exit.")
+
+            return CheckResult.correct()
+        }
+
+        @DynamicTest(order = 7)
+        fun notSameDimensionsTest3(): CheckResult {
+            val main = TestedProgram()
+            var outputString = main.start().trim().lowercase()
+            var position = checkOutput(outputString, 0, "Input the image filename:".lowercase())
+            if ( position  == -1 ) return CheckResult(false, "Invalid prompt for the image filename.")
+
+            try {
+                val infile1 = "test${File.separator}image3.png"
+                val inputFile1 = File(infile1)
+                if (!inputFile1.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                val infile2 = "test${File.separator}70x50.png"
+                val inputFile2 = File(infile2)
+                if (!inputFile2.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                outputString = main.execute("test${File.separator}image3.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "Input the watermark image filename:".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, after an image filename was input."
+                )
+
+                outputString = main.execute("test${File.separator}70x50.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "The image and watermark dimensions are different.".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, when The image and watermark dimensions are different."
+                )
+            } catch  (e: Exception) {
+                return CheckResult(false, "An exception was thrown, when trying to open an image file.")
+            }
+
+            if (!main.isFinished) return CheckResult(false, "The application didn't exit.")
+
+            return CheckResult.correct()
+        }
+
+        @DynamicTest(order = 8)
+        fun noAlphaChannelTest3(): CheckResult {
+            try {
+                val outFile = File("test${File.separator}out1.png")
+                if (outFile.exists()) outFile.delete()
+            } catch  (e: Exception) {
+                return CheckResult(false, "An exception was thrown, when trying to delete a previous created output file.")
+            }
+
+            val main = TestedProgram()
+            var outputString = main.start().trim().lowercase()
+            var position = checkOutput(outputString, 0, "Input the image filename:".lowercase())
+            if ( position  == -1 ) return CheckResult(false, "Invalid prompt for the image filename.")
+
+            try {
+                val infile1 = "test${File.separator}image3.png"
+                val inputFile1 = File(infile1)
+                if (!inputFile1.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                val infile2 = "test${File.separator}watermark2.png"
+                val inputFile2 = File(infile2)
+                if (!inputFile2.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                outputString = main.execute("test${File.separator}image3.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "Input the watermark image filename:".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, after an image filename was input."
+                )
+
+                outputString = main.execute("test${File.separator}watermark2.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "Input the watermark transparency percentage (Integer 0-100):".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, after a watermark filename was input."
+                )
+            } catch  (e: Exception) {
+                return CheckResult(false, "An exception was thrown, when trying to open an image file.")
+            }
+
+            outputString = main.execute("30").trim().lowercase()
+            position = checkOutput(outputString, 0, "Input the output image filename (jpg or png extension):".lowercase())
+            if (position == -1) return CheckResult(
+                false,
+                "Incorrect output, when the transparency percentage was input."
+            )
+
+            outputString = main.execute("test${File.separator}out1.png").trim().lowercase()
+            position = checkOutput(outputString, 0, "The watermarked image test${File.separator}out1.png has been created.".lowercase())
+            if (position == -1) return CheckResult(
+                false,
+                "Incorrect output, when the output filename was input."
+            )
+
+            if (!main.isFinished) return CheckResult(false, "The application didn't exit.")
+
+            val outFile = File("test${File.separator}out1.png")
+            if (!outFile.exists()) return CheckResult(
+                false,
+                "The output file hasn't been created."
+            )
+
+            if (!checkIfCorrectOutputFileS3(30, 50000,
+                    "test${File.separator}image3.png", "test${File.separator}watermark2.png", "test${File.separator}out1.png")) return CheckResult(
+                false,
+                "Incorrect output image file."
+            )
+
+            return CheckResult.correct()
+        }
+
+        @DynamicTest(order = 9)
+        fun notUsingAlphaChannelTest3(): CheckResult {
+            try {
+                val outFile = File("test${File.separator}out2.png")
+                if (outFile.exists()) outFile.delete()
+            } catch  (e: Exception) {
+                return CheckResult(false, "An exception was thrown, when trying to delete a previous created output file.")
+            }
+
+            val main = TestedProgram()
+            var outputString = main.start().trim().lowercase()
+            var position = checkOutput(outputString, 0, "Input the image filename:".lowercase())
+            if ( position  == -1 ) return CheckResult(false, "Invalid prompt for the image filename.")
+
+            try {
+                val infile1 = "test${File.separator}image3.png"
+                val inputFile1 = File(infile1)
+                if (!inputFile1.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                val infile2 = "test${File.separator}watermark3.png"
+                val inputFile2 = File(infile2)
+                if (!inputFile2.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                outputString = main.execute("test${File.separator}image3.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "Input the watermark image filename:".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, after an image filename was input."
+                )
+
+                outputString = main.execute("test${File.separator}watermark3.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "Do you want to use the watermark's Alpha channel?".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, after a watermark filename was input."
+                )
+            } catch  (e: Exception) {
+                return CheckResult(false, "An exception was thrown, when trying to open an image file.")
+            }
+
+            outputString = main.execute("no").trim().lowercase()
+            position = checkOutput(outputString, 0, "Input the watermark transparency percentage (Integer 0-100):".lowercase())
+            if (position == -1) return CheckResult(
+                false,
+                "Incorrect output, after declining to use the alpha channel."
+            )
+
+            outputString = main.execute("40").trim().lowercase()
+            position = checkOutput(outputString, 0, "Input the output image filename (jpg or png extension):".lowercase())
+            if (position == -1) return CheckResult(
+                false,
+                "Incorrect output, when the transparency percentage was input."
+            )
+
+            outputString = main.execute("test${File.separator}out2.png").trim().lowercase()
+            position = checkOutput(outputString, 0, "The watermarked image test${File.separator}out2.png has been created.".lowercase())
+            if (position == -1) return CheckResult(
+                false,
+                "Incorrect output, when the output filename was input."
+            )
+
+            if (!main.isFinished) return CheckResult(false, "The application didn't exit.")
+
+            val outFile = File("test${File.separator}out2.png")
+            if (!outFile.exists()) return CheckResult(
+                false,
+                "The output file hasn't been created."
+            )
+
+            if (!checkIfCorrectOutputFileS3(40, 50000,
+                    "test${File.separator}image3.png", "test${File.separator}watermark3.png", "test${File.separator}out2.png")) return CheckResult(
+                false,
+                "Incorrect output image file."
+            )
+
+            return CheckResult.correct()
+        }
+
+        @DynamicTest(order = 10)
+        fun usingAlphaChannelTest3(): CheckResult {
+            try {
+                val outFile = File("test${File.separator}out3.png")
+                if (outFile.exists()) outFile.delete()
+            } catch  (e: Exception) {
+                return CheckResult(false, "An exception was thrown, when trying to delete a previous created output file.")
+            }
+
+            val main = TestedProgram()
+            var outputString = main.start().trim().lowercase()
+            var position = checkOutput(outputString, 0, "Input the image filename:".lowercase())
+            if ( position  == -1 ) return CheckResult(false, "Invalid prompt for the image filename.")
+
+            try {
+                val infile1 = "test${File.separator}image3.png"
+                val inputFile1 = File(infile1)
+                if (!inputFile1.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                val infile2 = "test${File.separator}watermark3.png"
+                val inputFile2 = File(infile2)
+                if (!inputFile2.exists()) {
+                    return CheckResult(false, "An input test image file doesn't exist. Try reloading the project.")
+                }
+                outputString = main.execute("test${File.separator}image3.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "Input the watermark image filename:".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, after an image filename was input."
+                )
+
+                outputString = main.execute("test${File.separator}watermark3.png").trim().lowercase()
+                position = checkOutput(outputString, 0, "Do you want to use the watermark's Alpha channel?".lowercase())
+                if (position == -1) return CheckResult(
+                    false,
+                    "Incorrect output, after a watermark filename was input."
+                )
+            } catch  (e: Exception) {
+                return CheckResult(false, "An exception was thrown, when trying to open an image file.")
+            }
+
+            outputString = main.execute("yes").trim().lowercase()
+            position = checkOutput(outputString, 0, "Input the watermark transparency percentage (Integer 0-100):".lowercase())
+            if (position == -1) return CheckResult(
+                false,
+                "Incorrect output, after declining to use the alpha channel."
+            )
+
+            outputString = main.execute("20").trim().lowercase()
+            position = checkOutput(outputString, 0, "Input the output image filename (jpg or png extension):".lowercase())
+            if (position == -1) return CheckResult(
+                false,
+                "Incorrect output, when the transparency percentage was input."
+            )
+
+            outputString = main.execute("test${File.separator}out3.png").trim().lowercase()
+            position = checkOutput(outputString, 0, "The watermarked image test${File.separator}out3.png has been created.".lowercase())
+            if (position == -1) return CheckResult(
+                false,
+                "Incorrect output, when the output filename was input."
+            )
+
+            if (!main.isFinished) return CheckResult(false, "The application didn't exit.")
+
+            val outFile = File("test${File.separator}out3.png")
+            if (!outFile.exists()) return CheckResult(
+                false,
+                "The output file hasn't been created."
+            )
+
+            if (!checkIfCorrectOutputFileAlphaS3(20, 50000,
+                    "test${File.separator}image3.png", "test${File.separator}watermark3.png", "test${File.separator}out3.png")) return CheckResult(
+                false,
+                "Incorrect output image file."
+            )
+
+            return CheckResult.correct()
+        }
+
+    }
+
+    fun checkOutput(outputString: String, searchPos: Int, vararg checkStr: String): Int {
+        var searchPosition = searchPos
+        for (str in checkStr) {
+            val findPosition = outputString.indexOf(str, searchPosition)
+            if (findPosition == -1) return -1
+            if ( outputString.substring(searchPosition until findPosition).isNotBlank() ) return -1
+            searchPosition = findPosition + str.length
+        }
+        return searchPosition
+    }
+
+    fun checkIfCorrectOutputFileS3(per: Int, err: Long,
+                                   imageStr: String, watStr: String, outStr: String): Boolean {
+        val imageFile = File(imageStr)
+        val image = ImageIO.read(imageFile)
+        val watermarkFile = File(watStr)
+        val watermark = ImageIO.read(watermarkFile)
+        val outFile = File(outStr)
+        val outputImage = ImageIO.read(outFile)
+        var diff: Long = 0
+        for (y in 0 until image.height) {
+            for (x in 0 until image.width) {
+                val i = Color(image.getRGB(x, y))
+                val w = Color(watermark.getRGB(x, y))
+                val o = Color(outputImage.getRGB(x ,y))
+                val oc = Color(
+                    ((100 - per) * i.red + per * w.red) / 100,
+                    ((100 - per) * i.green + per * w.green) / 100,
+                    ((100 - per) * i.blue + per * w.blue) / 100
+                )
+                diff += abs(oc.red - o.red) + abs(oc.green - o.green) + abs(oc.blue - o.blue)
+            }
+        }
+        return diff <= err
+    }
+
+    fun checkIfCorrectOutputFileAlphaS3(per: Int, err: Long,
+                                        imageStr: String, watStr: String, outStr: String): Boolean {
+        val imageFile = File(imageStr)
+        val image = ImageIO.read(imageFile)
+        val watermarkFile = File(watStr)
+        val watermark = ImageIO.read(watermarkFile)
+        val outFile = File(outStr)
+        val outputImage = ImageIO.read(outFile)
+        var diff: Long = 0
+        for (y in 0 until image.height) {
+            for (x in 0 until image.width) {
+                val i = Color(image.getRGB(x, y))
+                val w = Color(watermark.getRGB(x, y), true)
+                val o = Color(outputImage.getRGB(x ,y))
+                val oc = if (w.alpha == 0) Color(i.red, i.green, i.blue)
+                else Color(
+                    ((100 - per) * i.red + per * w.red) / 100,
+                    ((100 - per) * i.green + per * w.green) / 100,
+                    ((100 - per) * i.blue + per * w.blue) / 100
+                )
+                diff += abs(oc.red - o.red) + abs(oc.green - o.green) + abs(oc.blue - o.blue)
+            }
+        }
+        return diff <= err
+    }
+
+
+  learner_created: false
+- name: test/70x50.png
+  visible: false
+  text: iVBORw0KGgoAAAANSUhEUgAAAEYAAAAyCAIAAABu/zoEAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kTtIw0Acxr8+pKKVInYQcchQnSyILxylikWwUNoKrTqYXPqCJg1Jiouj4Fpw8LFYdXBx1tXBVRAEHyBubk6KLlLi/5JCixgPjvvx3X0fd98B3kaFKYZ/HFBUU0/FY0I2tyoEXtELP/oxjZDIDC2RXszAdXzdw8PXuyjPcj/35+iT8wYDPALxHNN0k3iDeGbT1DjvE4dZSZSJz4nHdLog8SPXJYffOBdt9vLMsJ5JzROHiYViB0sdzEq6QjxFHJEVlfK9WYdlzluclUqNte7JXxjMqytprtMcRhxLSCAJARJqKKMCE1FaVVIMpGg/5uIfsv1JcknkKoORYwFVKBBtP/gf/O7WKExOOEnBGND1YlkfI0BgF2jWLev72LKaJ4DvGbhS2/5qA5j9JL3e1iJHQGgbuLhua9IecLkDDD5poi7ako+mt1AA3s/om3LAwC3Qs+b01trH6QOQoa6Wb4CDQ2C0SNnrLu/u7uzt3zOt/n4Ahqlyr9cYpmcAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElNRQflCwQROTKpWJOqAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAACBJREFUaN7twQEBAAAAgiD/r25IQAEAAAAAAAAAAAA8GCk2AAEkmiECAAAAAElFTkSuQmCC
+  learner_created: false
+- name: test/bits16.png
+  visible: false
+  text: iVBORw0KGgoAAAANSUhEUgAAAGUAAAAzEAIAAABRWY0xAAABhmlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AYht+milIqCnYQ6ZChCoIFURFHqWIRLJS2QqsOJpf+QZOGJMXFUXAtOPizWHVwcdbVwVUQBH9A3NycFF2kxO+SQosYD+7u4b3vfbn7DhAaFaaaXROAqllGKh4Ts7lVsecVAYQxQOuYxEw9kV7MwHN83cPH97soz/Ku+3P0KXmTAT6ReI7phkW8QTyzaemc94lDrCQpxOfE4wZdkPiR67LLb5yLDgs8M2RkUvPEIWKx2MFyB7OSoRJPE0cUVaN8IeuywnmLs1qpsdY9+QuDeW0lzXWaYcSxhASSECGjhjIqsBClXSPFRIrOYx7+YcefJJdMrjIYORZQhQrJ8YP/we/emoWpSTcpGAO6X2z7YwTo2QWaddv+Prbt5gngfwautLa/2gBmP0mvt7XIEdC/DVxctzV5D7jcAYaedMmQHMlPUygUgPcz+qYcMHgLBNbcvrXOcfoAZKhXyzfAwSEwWqTsdY9393b27d+aVv9+AJNIcrQDNf7qAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAB3RJTUUH5QodCi8lNhHejgAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAB2SURBVHja7dJBDQAgDMBAwL/nomKPJXcSmt6qOjDgSYC9sBfYC3thL7AX9sJeYC/shb3AXtgLe4G9sBf2AnthL7AX9sJeYC/shb3AXtgLe4G9sBf2AnthL+wF9sJeYC/shb3AXtgLe4G9sBf2AnthL+wF9mKBD19wBmDjgDPbAAAAAElFTkSuQmCC
+  learner_created: false
+- name: test/grey.png
+  visible: false
+  text: iVBORw0KGgoAAAANSUhEUgAAAGUAAAAzCAAAAACrwJn5AAAACXBIWXMAAC4jAAAuIwF4pT92AAAAB3RJTUUH5QodCiwSpYEoQgAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAuSURBVFjD7c0xEQAACASg1/6dtYWDBwWoyYGOxWKxWCwWi8VisVgsFovFYvmwLF6/AWVrlkPmAAAAAElFTkSuQmCC
+  learner_created: false
+- name: test/watermark2.png
+  visible: false
+  text: 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
+  learner_created: false
+- name: test/out3.png
+  visible: false
+  text: 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
+  learner_created: false
+- name: test/out2.png
+  visible: false
+  text: iVBORw0KGgoAAAANSUhEUgAAAZAAAADICAIAAABJdyC1AAAQAUlEQVR4Xu3U0Y0kuw2F4Q3ACew++t0xOIYNZGIw4Ocd2NlsIDeT3QR8jQaEvvUX2RKLUrWkU/ieBk1WjSieL9//8TcRkSl84Z9ERN6TAktEpqHAEpFpKLBEZBoKLBGZhgJLRKahwBKRaSiwRGQaCiwRmYYCS0SmocASkWkosERkGgosEZmGAktEpqHAEpFpKLBEZBoKLBGZhgJLRKahwBKRaSiwRGQaCiwRmYYCS0SmocASkWkosERkGgosEZmGAktEptElsL7o+evDIxKRgC67dNzX7R8ekYgEdNml475u//CIRCSgyy4d93X7h0ckIgFddum4r9s/PCIRCeiyS8d93f7hEYlIQJddOu7r9g+PSEQCuuzScV+3f3hEIhLQZZeO+7r9wyMSkYAuu3Tc1+0fHpGIBHTZpeO+bv/wiDb3+fd/y5I461xddum4r9s/PKLN8aLLGjjrXF126biv2z88os3xossaOOtcXXbpuK/bPzyizfGiyxo461xddum4r9s/PKLN8aLLGjjrXF126biv2z88os3xossaOOtcXXbpuK/bPzyizfGiyxo461xddum4r9s/PKLN8aLLGjjrXF126biv2z88os3xossaOOtcXXbpuK/bPzyizfGiyxo461xddum4r9s/PKLN8aLLGjjrXF126biv2z88os3xossaOOtcXXbpuK/bPzyizfGiyxo461xddum4r9s/PKLN8aLLGjjrXF126biv2z88os3xossaOOtcXXbpuK/bPzyizfGiyxo461xddum4r9s/PKJWH9++dcJ3DcCLLmvgrHMl7BId93X758d//3kRgyYLxzcAL7qsgbPOpcAa8TCAWjFosnB8A/Ciyxo461wKrBEPA6gVgyYLxzcAL7qsgbPOpcAa8TCAWjFosnB8A/Ciyxo461wKrBEPA6gVgyYLxzcAL7qsgbPOpcAa8TCAWjFosnB8A/Ciyxo461wKrBEPA6gVgyYLxzcAL7qsgbPOpcAa8TCAWjFosnB8A/Ciyxo461wKrBEPA6gVgyYLxzcAL7qsgbPOpcAa8TCAWjFosnB8A/Ciyxo461wKrBEPA6gVgyYLxzcAL7qsgbPOpcAa8TCAWjFosnB8A/Ciyxo461wKrBEPA6gVgyYLxzcAL7qs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
+  learner_created: false
+- name: test/watermark3.png
+  visible: false
+  text: iVBORw0KGgoAAAANSUhEUgAAAZAAAADICAYAAADGFbfiAAAEsElEQVR42u3dUW7cMAwE0Nz/0m1OUBTJSuIM30P7WdSWKI5teXe/vgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID/8Of7z2//Tj62k8enXswDaAgDm7TwECCAABEg6sVcgIZwpzl86pg0rTn1YuRAQzjeID4ZHhqXAAGGh8fUADHDc+rF6IGGcLRJuPsQIIAAeX4smpYAAQSIphVeL0YONINjjUJ4uPsAlgfIT5rFlONAgAACRNMSIEB7gJw6Bk1rTr1sWQ/mxVxoBhcb98lj+NdxvCzK1EXRupiTL1w+fcxN3z4hSATIsWNI/IyLx1cZtZ/0DdWNn/sSJCWLqPH/3/yooWXxpjXYqcEx9bV9IbIgQCYUS9JryvY/8ptvY3j89LzS5wIBEhMg6fUiPPKu1JvDQ4CELKjJ4XG7IW69+0jfu9FwM17XFyJLAmRScSQsmoZ6ER4zX3F3LkJk/MISIB3v6G/6bMSUpjU9PBrORRI8eJ790wlqKextdx+JIdjQeFsCpOkuig80g9P/5jcfarrR4N19zD6PhFfQbzXd1zXaMBcIkCcB4kN3mQHyelxS9iY2zAWPA+TmVyq0LB4BMj88Ts5xwzk0nQdBAXK7abV8xsT+x5uwmxYgk+a35Tw4MMgCRHg03X1MCdeUc9gwF4QFyKtiECACZGuAtNx9CJDlAZK2iLYUcUqApH3FSHPTbZgLBEhMgGyoFwEiQATI0gD5dJGcDKfEMREgucc5IUAm9IO2uWD489pJCyltz8bjKwEyec9AgAgQAXIhQFrrRYAIEAEiQI4HSPrz0/bCtYGesado/0OARO1/nCyWLQGy8YLD3YcASZgLgq82kgpQeAgQG+geXwmQQVcbG35vWoAIkNfjbf9DgEQWTNvz09aCFSB3x0eAeHwlQATI+gDZcKwNe38tASI8whdY0zfYCo/MRZnSfG+/0Ti9H0ydC0KvJpsDZEO9bAiQ5B+Rmv7ztcJDgEQ3LQGyL0Bu/erdjQBp+P3zaXOOAHkeIFvq5WUTm97c08e9KWglgsdXMQEiPO6MpcY7Z/+u5Tyw/yFABIgAESACxOOrO8e5vViTF39Dw2ppvMJDgAiQhcUqQN42LAEiPOIbwsb9DwHS0cAaGlZL8xUe7j7WHafw8Ay+/ZXyLWEoAQRIXIBsrBePUDIuaDZ8UanwsP8hQARI1H5CyqPol+cnOASIACkv3tbXLzWrOb3AXCB0FfDakFTX5gLcfaCu1TQID1DXYJGh/kbs+5gVECCU159NaRAeqEHhAZsWrhGkLUDMBrj7QHioaRAeqEPhATWL1gjSFCBmAdx9IEDUMwgP1KPggKrFagRJDw+jDu4+UJ9qFwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgFX+AuQH8aBVCFu/AAAAAElFTkSuQmCC
+  learner_created: false
+- name: test/out1.png
+  visible: false
+  text: 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
+  learner_created: false
+- name: test/image3.png
+  visible: false
+  text: iVBORw0KGgoAAAANSUhEUgAAAZAAAADICAIAAABJdyC1AAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kTtIw0Acxr8+pKKVInYQcchQnSyILxylikWwUNoKrTqYXPqCJg1Jiouj4Fpw8LFYdXBx1tXBVRAEHyBubk6KLlLi/5JCixgPjvvx3X0fd98B3kaFKYZ/HFBUU0/FY0I2tyoEXtELP/oxjZDIDC2RXszAdXzdw8PXuyjPcj/35+iT8wYDPALxHNN0k3iDeGbT1DjvE4dZSZSJz4nHdLog8SPXJYffOBdt9vLMsJ5JzROHiYViB0sdzEq6QjxFHJEVlfK9WYdlzluclUqNte7JXxjMqytprtMcRhxLSCAJARJqKKMCE1FaVVIMpGg/5uIfsv1JcknkKoORYwFVKBBtP/gf/O7WKExOOEnBGND1YlkfI0BgF2jWLev72LKaJ4DvGbhS2/5qA5j9JL3e1iJHQGgbuLhua9IecLkDDD5poi7ako+mt1AA3s/om3LAwC3Qs+b01trH6QOQoa6Wb4CDQ2C0SNnrLu/u7uzt3zOt/n4Ahqlyr9cYpmcAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElNRQflCwQSFCR/4MJNAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAqdJREFUeNrt3b1twlAUgFFAb4LIEnQZgQGCImpc00GF2CBNJnDDBpSBjhYWQHQ0GSEdSFFWcBqkpEyEnn/PGcDgi/Xpunl0szTpANRBzwgAwQIQLECwAAQLQLAAwQIQLADBAgQLQLAABAsQLADBAhAsQLAABAtAsADBAhAsAMECBAtAsAAECxAsAMECuAkxLvq6/zTZ37I0MQSwYQGCBSBYAIIFCBaAYAEIFiBYAIIF8EfBCCje8utkCI20fniyYQEIFiBYAIIFCBaAYAEIFiBYAIIFIFiAYAEIFoBgAYIFIFgA/+U8rHoYfgwiXfn98WK8CBY/FtvpnVc4j47GCF4JAcECECxAsAAEC0CwAMECECwAwQIEC0CwAAQLECwAwQIQLKCRopyHlaVJBW/1/kOpABsWgGABggUgWACCBQgWgGABCBYgWACCBSBYgGABCBaAYAGCBSBYgGABCBaAYAGCBSBYAIIFCBaAYAEIFiBYAIIFIFhAM4UCPuNt063CrS782pX5dZYTg2/d4zSf5TYswCshgGABCBYgWACCBSBYgGABCBaAYAGCBVCS0J5bHee7+n75VafvYQUbFiBYAIIFCBaAYAEIFiBYAIIFIFiAYAEIFoBgAYIFIFgAggUIFkCZghHUwsvxaghgwwIEC0CwAMECECwAwQIEC0CwAAQLECwAwQIQLECwAAQLQLAAwQIQLADBAgQLQLAABAsQLADBAhAsQLAAovPPz5Tg+TAyBGxYgGABCBaAYAGCBSBYAIIFCBaAYAEIFiBYAIIFIFiAYAFEVsTxMvNZbtCADQsQLADBAhAsQLAABAtAsADBAhAsAMECBAtAsAAECxAsAMECECxAsAAEC0CwAMECECwAwQIEC0CwAMECECwAwQIEC0CwAAQLaI9vKKEfLbv24tQAAAAASUVORK5CYII=
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/222/stages/1114/implement#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Sun, 24 Apr 2022 18:23:41 UTC
+record: 3
